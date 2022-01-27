@@ -28,17 +28,7 @@
     </header>
     <div id="gallery" style="display: table; overflow:hidden; margin-top: 0.2rem;"></div>
     <Script>
-        const data = {
-          method: 'flickr.photos.search',
-          api_key: '36432ff387e9575f2b13ba503c441194',
-          text: document.getElementById('search').value, // Search Text if any
-          sort: 'interestingness-desc',
-          per_page: 12,
-          format: 'json',
-          nojsoncallback: 1,
-        };
-        const parameters = new URLSearchParams(data);
-
+        
         const uri = `https://api.flickr.com/services/rest/?method=flickr.galleries.getPhotos&api_key=36432ff387e9575f2b13ba503c441194&gallery_id=66911286-72157647277042064&format=json&nojsoncallback=1`;//put uri for flickr api containing app key as well
         
         
