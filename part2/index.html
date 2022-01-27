@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Document</title>
+</head>
+<body id="body">
+    
+    <header id="header">Title
+        <div class="search">
+            <input /> <button>search here</button>
+        </div>
+    </header>
+
+    <Script>
+
+        const data = {
+          method: 'flickr.photos.search',
+          api_key: '36432ff387e9575f2b13ba503c441194',
+          text: '', // Search Text if any
+          sort: 'interestingness-desc',
+          per_page: 12,
+          format: 'json',
+          nojsoncallback: 1,
+        };
+        const parameters = new URLSearchParams(data);
+
+
+
+        const uri = `https://api.flickr.com/services/rest/?${parameters}`;//put uri for flickr api containing app key as well
+        fetch(uri)
+        .then((response)=>response.json())
+        .then((responseObj)=>{
+            let picArr = responseObj.photoes.photo.map((pic)=>{
+                var src = `https://farm${pic.farm}.staticflickr.com/${pic.server}/${pic.id}_${pic.secret}`;
+                var galImg = document.createElement('gallery-image');
+                galImg.src = src;
+                document.getElementById('gallery').appendChild(galImg);
+            });
+        })
+    </Script>
+
+    <div id="gallery"></div>
+    
+    <script src="galary-image-component.js"></script>
+</body>
+</html>
