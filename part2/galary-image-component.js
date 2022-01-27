@@ -6,6 +6,7 @@ class MyComponent extends HTMLElement {
 
     connectedCallback(){
         this.render();
+        this.shadowRoot.querySelector('img').src = this.getAttribute('src');
     }
 
     render(){
@@ -20,8 +21,8 @@ class MyComponent extends HTMLElement {
         }
         
         div.gallery img {
-          width: 100%;
-          height: auto;
+          width: 300px;
+          height: 300px
         }
         
         div.desc {
@@ -37,12 +38,13 @@ class MyComponent extends HTMLElement {
           padding: 0 6px;
           float: left;
           width: 24.99999%;
+          height: 12%
         }
         
         @media only screen and (max-width: 700px) {
           .responsive {
             width: 49.99999%;
-            margin: 6px 0;
+            margin: 6px;
           }
         }
         
@@ -60,10 +62,9 @@ class MyComponent extends HTMLElement {
         </style>
         <div class="responsive">
             <div class="gallery">
-              <a target="_blank" href="img_5terre.jpg">
-                <img src="${this.getAttribute('src')}" width="600" height="400">
-              </a>
-              <div class="desc">${this.getAttribute('text')}</div>
+              
+                <img  width="600" height="400">
+              
             </div>
         </div>
         `
@@ -71,3 +72,5 @@ class MyComponent extends HTMLElement {
 }
 
 customElements.define('gallery-image',MyComponent);
+
+//src="${this.getAttribute('src')}"

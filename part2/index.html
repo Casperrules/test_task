@@ -5,22 +5,33 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
+    
     <title>Document</title>
 </head>
 <body id="body">
     
-    <header id="header">Title
+    <header id="header"> <div class="title">My Gallary</div> 
         <div class="search">
-            <input /> <button>search here</button>
+            <div>
+                <i class="fas fa-search"></i>
+            </div>
+            <input id="search" type="text" placeholder="photoes, people, groups"/>
+        </div>
+        <div class="authenticate">
+            <div class="login">
+              <a href="route to login"> Log In</a> 
+            </div>
+            <div class="signin">
+                <a href="route to signin page">Sign Up</a>
+            </div>
         </div>
     </header>
-
+    <div id="gallery" style="display: table; overflow:hidden; margin-top: 0.2rem;"></div>
     <Script>
-
         const data = {
           method: 'flickr.photos.search',
           api_key: '36432ff387e9575f2b13ba503c441194',
-          text: '', // Search Text if any
+          text: document.getElementById('search').value, // Search Text if any
           sort: 'interestingness-desc',
           per_page: 12,
           format: 'json',
@@ -28,23 +39,22 @@
         };
         const parameters = new URLSearchParams(data);
 
-
-
-        const uri = `https://api.flickr.com/services/rest/?${parameters}`;//put uri for flickr api containing app key as well
-        fetch(uri)
-        .then((response)=>response.json())
-        .then((responseObj)=>{
-            let picArr = responseObj.photoes.photo.map((pic)=>{
-                var src = `https://farm${pic.farm}.staticflickr.com/${pic.server}/${pic.id}_${pic.secret}`;
-                var galImg = document.createElement('gallery-image');
-                galImg.src = src;
-                document.getElementById('gallery').appendChild(galImg);
+        const uri = `https://api.flickr.com/services/rest/?method=flickr.galleries.getPhotos&api_key=36432ff387e9575f2b13ba503c441194&gallery_id=66911286-72157647277042064&format=json&nojsoncallback=1`;//put uri for flickr api containing app key as well
+        
+        
+        fetch(uri).then(function(response) {
+  return response.json();
+}).then(function(data) {
+    let picArr = data.photos.photo.map((pic)=>{
+                var src = `https://farm${pic.farm}.staticflickr.com/${pic.server}/${pic.id}_${pic.secret}.jpg`;
+                document.getElementById('gallery').innerHTML+=`<gallery-image src=${src}>`
             });
-        })
+}).catch(function() {
+  console.log("error");
+});
     </Script>
-
-    <div id="gallery"></div>
     
+    <script src="https://use.fontawesome.com/a226b4da81.js"></script>
     <script src="galary-image-component.js"></script>
 </body>
 </html>
