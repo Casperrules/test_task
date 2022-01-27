@@ -1,7 +1,7 @@
 import express from 'express';
 import expressAsyncHandler from 'express-async-handler';
 
-import Product from '../models/product';
+import Product from '../models/product.js';
 
 const router = express.Router();
 
@@ -13,7 +13,7 @@ router.get("/",expressAsyncHandler(async (req,res)=>{
 
 // get specific product 
 router.get("/:id",expressAsyncHandler(async (req,res)=>{
-    const product = await Product.findById(req.params.id);
+    const product = await Product.find({productId:req.params.id});
     if(product){
         res.send(product);
     }
@@ -30,14 +30,23 @@ router.post('/addProduct',expressAsyncHandler(async (req,res)=>{
     const newProduct = req.body.newProduct;
     //if product exists, skip adding and return message
     const product = Product.find({productId: newProduct.productId})
-    if (product){
+    if (product.length>0){
         res.send({message: "product already in the database. skipping operation..."});
         return
     }
     if (newProduct){
-        Product.create(newProduct,(err,res)=>{
-            if(err) res.send({message:"could not save data. try again due to error:"+err});
-        });
+        var prod = new Product();
+        prod.productId = newProduct.productId;
+        prod.productName = newProduct.productName;
+        prod.price = newProduct.price;
+        prod.save((err,data)=>{
+            if(err){
+                console.error(err);
+            }
+            else{
+                res.status(200).send("inserted")
+            }
+        })
     }
 }));
 
@@ -49,17 +58,29 @@ router.get('/deleteProduct/:id',expressAsyncHandler((req,res)=>{
         res.send({message:"product not in database. skipping delete ..."})
         return
     }
-    Product.deleteOne({productId:req.params.id}, (err,res)=>{
-       if(err) res.send({message:"cannot dedlete data from DB due to error : "+err});
+    Product.deleteOne({productId:req.params.id}, (err,_)=>{
+       if(err){
+        res.send({message:"cannot dedlete data from DB due to error : "+err});
+       }
+       else{
+           res.send({message:"deleted"})
+       }
     });
 }));
 
 // updating values of a product in DB where product id is body.product.productId
 router.post('/updateProduct',expressAsyncHandler(async (req,res)=>{
     const updatedProductValue = req.body.updatedProduct
-    Product.updateOne({productId: updatedProductValue.productId}, updatedProductValue, (err,res)=>{
-        if(err) res.send({message:"error updating values due to error: "+err});
-    }); 
+    Product.updateOne({productId: updatedProductValue.productId}, updatedProductValue, (err,_)=>{
+        if(err){
+            res.send({message:"error updating values due to error: "+err});
+        }
+        else{
+            res.send({message:"updated"})
+        }
+
+    });
+
     // assuming that product Id is same , if product Id can also be updated, will need to specify based on what to update
 } ));
 

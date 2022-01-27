@@ -1,20 +1,20 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import productRouters from './routers/productRouter';
+import router from './routers/productRouter.js';
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 
-const dbUrl = "mongodb+srv://Adarsh:<password>@cluster0.5747a.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+const dbUrl = "mongodb://localhost:27017"
 
-mongoose.connect(dbUrl,{
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true
-});
+mongoose.connect(dbUrl);
 
-app.use('/product',productRouters);
+app.use('/product',router);
+
+app.get('/',(req,res)=>{
+    res.send("server running")
+})
 
 const port = 5000
 app.listen(port,()=>{
